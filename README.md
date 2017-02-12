@@ -70,6 +70,8 @@ Go back to Main Menu and repeat it as many times as you want.
 ## Authors
 
 * **James Pak** - *02/12/17* - [kai3n](https://github.com/kai3n)
+* **Taekyoon Choi** - *02/12/17* - [Taekyoon](https://github.com/Taekyoon)
+* **Seungyun Lee** - *02/12/17* - [kai3n](https://github.com/dltmddbs64)
 
 
 ## License

@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-
 class Helpers(object):
     '''
     Image manipulation helper functions

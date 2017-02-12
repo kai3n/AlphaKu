@@ -20,13 +20,13 @@ class Builder(object):
 
     def __init__(self, imgDir=None, rebuild=False):
         self.imgDir = (os.path.abspath(imgDir) if imgDir else
-            os.path.join(os.path.dirname(os.getcwd()), 'train/'))
+            os.path.join(os.path.dirname(os.getcwd()), 'sample/'))
         self.usedSet = {}
         if rebuild == False:
             usedSetPath = os.path.join(os.getcwd(), 'usedSet')
             if os.path.exists(usedSetPath):
                 self.usedSet = load(usedSetPath)
-        self.trainingData = load('train') if self.usedSet else []
+        self.trainingData = load('sample') if self.usedSet else []
         self.testingData = load('test') if self.usedSet else []
 
         try:
@@ -74,7 +74,7 @@ class Builder(object):
 
     def saveData(self):
         dump(self.usedSet, 'usedSet')
-        dump(self.trainingData, 'train')
+        dump(self.trainingData, 'sample')
         dump(self.testingData, 'test')
 
 Builder()

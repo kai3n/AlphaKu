@@ -6,7 +6,7 @@ import pickle
 import json
 
 import numpy as np
-import model
+import scripts.model
 from scripts.sudokuExtractor import Extractor
 from scripts.train import NeuralNetwork
 from scripts.sudoku_str import SudokuStr
@@ -37,7 +37,7 @@ def get_cells2(image_path):  # yields 9 * 9 = 81 cells
         keep_prob = tf.placeholder("float")
         y2, variables = model.convolutional(x, keep_prob)
     saver = tf.train.Saver(variables)
-    saver.restore(sess, "convolutional.ckpt")
+    saver.restore(sess, "scripts/convolutional.ckpt")
 
     for row in Extractor(os.path.abspath(image_path)).cells:
         for cell in row:

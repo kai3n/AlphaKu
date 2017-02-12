@@ -17,7 +17,7 @@ def upload_file():
         f = request.files['file']
         f.save(f.filename)
         return 'file uploaded successfully'
-        
+
 @app.route('/jsontest')
 def testjson():
     list = [
@@ -25,3 +25,9 @@ def testjson():
         {'param': 'bar', 'val': 10}
     ]
     return jsonify(results=list)
+
+@app.route('/slow')
+def slow():
+    import time
+    time.sleep(10)
+    return 'zzz'

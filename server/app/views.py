@@ -11,10 +11,10 @@ def index():
 def upload():
     return render_template('upload.html')
 
-@app.route('/uploader', methods=['GET', 'POST'])
+@app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        f = request.files['file']
+        f = request.files['image']
         f.save(f.filename)
         return 'file uploaded successfully'
 

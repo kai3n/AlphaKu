@@ -29,27 +29,37 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
+
+
 @RuntimePermissions
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
-    public static String URL = "http://52.78.18.169:5000/uploader";
+    String[] str_results = new String[81];
+    public static String url = "http://52.79.99.66:5000/uploader";
 
     private static final int REQUEST_TAKE_PHOTO = 1;
 
@@ -58,9 +68,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView ivPreview;
 
     String mCurrentPhotoPath;
-    String encodeBa;
 
     Bitmap targetPicture;
+    String bytePicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        mCurrentPhotoPath = "file://" + image.getAbsolutePath();
         return image;
     }
 
@@ -197,55 +207,118 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /////////////
     // Upload //
     ///////////
-    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    /*
     void upload() {
-        Log.e("tag","start upload");
+        try {
+
+            ANRequest request = AndroidNetworking.upload(url)
+                    .addMultipartFile("image", createImageFile())
+                    .addMultipartParameter("filename", "test.jpg")
+                    .setUploadProgressListener(new UploadProgressListener() {
+                        @Override
+                        public void onProgress(long bytesUploaded, long totalBytes) {
+                            // do anything with progress
+                        }
+                    })
+                    .build();
+
+
+            ANResponse<JSONObject> response = request.executeForJSONObject();
+
+            if (response.isSuccess()) {
+                JSONObject jsonObject = response.getResult();
+                Log.d("tag", "response : " + jsonObject.toString());
+                Response okHttpResponse = response.getOkHttpResponse();
+                Log.d("tag", "headers : " + okHttpResponse.headers().toString());
+            } else {
+                ANError error = response.getError();
+                // Handle Error
+                Log.e("tag", error.toString());
+            }
+        } catch (IOException e){
+            Log.e("tag", e.toString());
+        }
+
+        AndroidNetworking.upload(url)
+                .addMultipartFile("image", image)
+                .addMultipartParameter("filename","test.jpg")
+                .setTag("uploadTest")
+                .setPriority(Priority.HIGH)
+                .build()
+                .setUploadProgressListener(new UploadProgressListener() {
+                    @Override
+                    public void onProgress(long bytesUploaded, long totalBytes) {
+                        // do anything with progress
+                    }
+                })
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse (JSONObject response){
+                        // do anything with response
+                        Log.e("tag", "response" + response);
+
+                    }
+                    @Override
+                    public void onError (ANError error){
+                        // handle error
+                        Log.e("tag", error.toString());
+                    }
+                });
+
+    }
+    */
+
+    void upload() {
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         targetPicture.compress(Bitmap.CompressFormat.JPEG, 50, bao);
         byte[] ba = bao.toByteArray();
-        encodeBa = Base64.encodeToString(ba, Base64.DEFAULT);
-        Log.e("tag", "Its running");
+        bytePicture = Base64.encodeToString(ba, Base64.NO_WRAP);
+
+        // Upload image to server
         new uploadToServer().execute();
     }
 
-    public class uploadToServer extends AsyncTask<Void, Void, String> {
 
-        private ProgressDialog pd = new ProgressDialog(MainActivity.this);
+    public class uploadToServer extends AsyncTask<Void, Void, String> {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd.setMessage("Wait image uploading!");
-            pd.show();
         }
 
         @Override
         protected String doInBackground(Void... params) {
 
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("base64", encodeBa));
+            nameValuePairs.add(new BasicNameValuePair("image", bytePicture));
             nameValuePairs.add(new BasicNameValuePair("ImageName", System.currentTimeMillis() + ".jpg"));
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost(URL);
+                HttpPost httppost = new HttpPost(url);
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpResponse response = httpclient.execute(httppost);
                 String st = EntityUtils.toString(response.getEntity());
                 Log.v("log_tag", "In the try Loop" + st);
+                JSONObject reader = new JSONObject(st);
+
+                JSONArray results = reader.getJSONArray("results");
+                for (int i = 0; i < results.length(); i++) {
+                    str_results[i] = results.getString(i);
+                }
+
+                Intent intent =  new Intent(MainActivity.this, ResultActivity.class);
+                intent.putExtra("answer", str_results);
+                startActivity(intent);
 
             } catch (Exception e) {
                 Log.v("log_tag", "Error in http connection " + e.toString());
             }
             return "Success";
-
         }
 
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            pd.hide();
-            pd.dismiss();
         }
     }
-
 }
 
 

@@ -1,14 +1,5 @@
 import tensorflow as tf
 
-
-# Softmax Regression Model
-def regression(x):
-    W = tf.Variable(tf.zeros([784, 10]), name="W")
-    b = tf.Variable(tf.zeros([10]), name="b")
-    y = tf.nn.softmax(tf.matmul(x, W) + b)
-    return y, [W, b]
-
-
 # Multilayer Convolutional Network
 def convolutional(x, keep_prob):
     def conv2d(x, W):

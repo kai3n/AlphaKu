@@ -11,7 +11,7 @@ with tf.variable_scope("convolutional"):
     keep_prob = tf.placeholder(tf.float32)
     y, variables = model.convolutional(x, keep_prob)
 
-# train
+# sample
 y_ = tf.placeholder(tf.float32, [None, 10])
 cross_entropy = -tf.reduce_sum(y_ * tf.log(y))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)

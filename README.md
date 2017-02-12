@@ -42,7 +42,7 @@ Run the project.
 
 Take a picture of Sudoku.
 Ex.
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Sudoku-by-L2G-20050714.svg/1920px-Sudoku-by-L2G-20050714.svg.png =250x250)
+![Sudoku](https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Sudoku-by-L2G-20050714.svg/1920px-Sudoku-by-L2G-20050714.svg.png =250x250)
 
 ```
 Taking a picture checks if user gave a permission to access the camera. Then, compress 

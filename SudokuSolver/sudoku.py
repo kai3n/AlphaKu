@@ -8,15 +8,8 @@ import json
 import numpy as np
 import scripts.model
 from scripts.sudokuExtractor import Extractor
-from scripts.train import NeuralNetwork
 from scripts.sudoku_str import SudokuStr
 from scripts import sudopy
-
-
-def create_net(rel_path):
-    with open(os.getcwd() + rel_path) as in_file:
-        sizes, biases, wts = pickle.load(in_file)
-    return NeuralNetwork(customValues=(sizes, biases, wts))
 
 def get_cells(image_path):  # yields 9 * 9 = 81 cells
     net = create_net(rel_path='/SudokuSolver/networks/net')

@@ -25,12 +25,15 @@ def get_cells(image_path):  # yields 9 * 9 = 81 cells
         for cell in row:
             a = sess.run(y2, feed_dict={x: np.reshape(cell, (1, 784)), keep_prob: 1.0}).flatten().tolist()
             digit = np.argmax(a)
-            yield str(digit) if a[digit] > 0.9925 else '.'
+            yield str(digit) if a[digit] > 0.93 else '.'
 
 def solver(image_path):
-        grid = ''.join(cell for cell in get_cells(image_path))
-        print(grid)
-        s = sudopy.solve(grid)
+        try:
+            grid = ''.join(cell for cell in get_cells(image_path))
+            print(grid)
+            s = sudopy.solve(grid)
+        except:
+            s = 0
         return s
 
 

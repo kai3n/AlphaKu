@@ -15,7 +15,7 @@ def upload():
 def upload_file():
     if request.method == 'POST':
         f = request.files['image']
-        f.save(f.filename)
+        f.save('source/' + f.filename)
         return 'file uploaded successfully'
 
 @app.route('/jsontest')

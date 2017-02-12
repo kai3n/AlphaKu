@@ -21,7 +21,7 @@ A step by step series of examples that tell you have to get a development env ru
 
 Say what the step will be
 
-```
+```python
 from SudokuSolver import sudoku
 sudoku.solver("your_image_file.jpg")  # return list of anwer key
 ```

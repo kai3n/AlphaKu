@@ -1,42 +1,71 @@
 # AlphaKu
 
-AlphaKu is Sudoku Solver based on Deep Learing, which automatically finds the solution in the picture.
+AlphaKu is an android application that solves a Sudoku puzzle by using image processing and deep learning.
 
-## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
+## Prerequisites
 
 This open source is based on Python 2.7.
 
 ```
 Python 2.7
 OpenCV
+Android Studio
+An android phone (Marshmallow 6.0 or higher) or a virtual device
 ```
 
-### Installing
+## Quick Start and Installation
 
-A step by step series of examples that tell you have to get a development env running
+These instructions will get you a copy of the project up and run on your 
+local machine for development and testing purposes. See deployment for notes 
+on how to deploy the project on a live system.
 
-Say what the step will be
+To get started, download this repository.
+~~~ sh
+$ git clone https://github.com/kai3n/AlphaKu.git
+~~~
 
+Compile and run SudokuSolver project to setup a server.
 ```python
 from SudokuSolver import sudoku
-sudoku.solver("your_image_file.jpg")  # return list of anwer key
+sudoku.solver("your_image_file.jpg")  # return list of answer key
+python run.py
 ```
 
-## Running the tests
+Import Lab-Intent_FileProvider project in Android Studio.
 
-Explain how to run the automated tests for this system
+### Running the application and Purpose
 
-### Break down into end to end tests
+Connect the android phone to your PC/MAC. If not, run a virtual device.
 
-Explain what these tests test and why
+Run the project.
+
+Take a picture of Sudoku.
+Ex.
+![Sudoku](https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Sudoku-by-L2G-20050714.svg/1920px-Sudoku-by-L2G-20050714.svg.png)
 
 ```
-Give an example
+Taking a picture checks if user gave a permission to access the camera. Then, compress 
+the picture into a .JEPG and encode it to bytes using Base64.
 ```
+
+Wait till the image gets sent to the server and processed.
+
+```
+Once the picture is taken, the image is getting uploaded to the server(http) and the 
+program runs image processing to correctly copy the clues. Then, it runs the AI program 
+to solve Sudoku. The time to finish this step varies, depending on the quality of the picture.
+```
+
+Once the answer is displayed, compare it with the original to check if the ones that were 
+already given are correctly copied over and check the answer.
+
+```
+Once it solves Sudoku, it passes down the answer as an array of JSon which will be
+converted as an array of String and printed on the screen using Grid View.
+```
+
+Go back to Main Menu and repeat it as many times as you want.
 
 ## Authors
 
@@ -52,38 +81,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * https://www.youtube.com/watch?v=vq2nnJ4g6N0
 * https://github.com/aymericdamien/TensorFlow-Examples
 * https://github.com/sugyan/tensorflow-mnist
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+* https://github.com/amitshekhariitbhu/Fast-Android-Networking

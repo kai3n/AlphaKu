@@ -43,7 +43,7 @@ Run the project.
 Take a picture of Sudoku.
 Ex.
 
-![Sudoku](http://www.educationworld.com/a_lesson/sudoku/images/sudoku_002.gif)
+![Sudoku](https://yasminezikry.files.wordpress.com/2009/04/cbhsudoku.jpg)
 
 ```
 Taking a picture checks if user gave a permission to access the camera. Then, compress 

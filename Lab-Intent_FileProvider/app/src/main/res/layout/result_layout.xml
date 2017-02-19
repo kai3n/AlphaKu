@@ -4,14 +4,15 @@
     android:id="@+id/result_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.inthecheesefactory.lab.intent_fileprovider.ResultActivity">
 
     <GridView
         android:numColumns="9"
+        android:textAlignment="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
@@ -20,6 +21,7 @@
         android:layout_above="@+id/tomain"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:background="@drawable/grids"
         android:id="@+id/sudo_matrix" />
 
     <Button

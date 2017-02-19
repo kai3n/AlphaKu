@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -8,24 +9,32 @@
     android:padding="16dp"
     tools:context="com.inthecheesefactory.lab.intent_fileprovider.MainActivity">
 
-    <Button
-        android:id="@+id/btnTakePhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Take a Photo" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="22pt"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnTakePhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take a Photo" />
+
+        <Button
+            android:text="Upload"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnUploadPhoto"
+            android:layout_width="wrap_content" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/ivPreview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:adjustViewBounds="true" />
-
-    <Button
-        android:text="Upload"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnUploadPhoto"
-        android:layout_width="wrap_content" />
+        android:adjustViewBounds="true"
+        android:layout_weight="878" />
 
 </LinearLayout>

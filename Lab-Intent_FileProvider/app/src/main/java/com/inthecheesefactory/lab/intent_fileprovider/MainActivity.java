@@ -2,6 +2,7 @@ package com.inthecheesefactory.lab.intent_fileprovider;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -66,16 +68,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnTakePhoto;
     Button btnUpdatePhoto;
     ImageView ivPreview;
+    Context context;
 
     String mCurrentPhotoPath;
 
     Bitmap targetPicture;
     String bytePicture;
 
+    static AlertDialog.Builder alertDialogBuilder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = MainActivity.this;
+        alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
         initInstances();
     }
@@ -207,70 +214,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /////////////
     // Upload //
     ///////////
-    /*
+
     void upload() {
-        try {
+        if (this.targetPicture == null) {
+            this.showErrorMessage("Picture does not exist.");
 
-            ANRequest request = AndroidNetworking.upload(url)
-                    .addMultipartFile("image", createImageFile())
-                    .addMultipartParameter("filename", "test.jpg")
-                    .setUploadProgressListener(new UploadProgressListener() {
-                        @Override
-                        public void onProgress(long bytesUploaded, long totalBytes) {
-                            // do anything with progress
-                        }
-                    })
-                    .build();
-
-
-            ANResponse<JSONObject> response = request.executeForJSONObject();
-
-            if (response.isSuccess()) {
-                JSONObject jsonObject = response.getResult();
-                Log.d("tag", "response : " + jsonObject.toString());
-                Response okHttpResponse = response.getOkHttpResponse();
-                Log.d("tag", "headers : " + okHttpResponse.headers().toString());
-            } else {
-                ANError error = response.getError();
-                // Handle Error
-                Log.e("tag", error.toString());
-            }
-        } catch (IOException e){
-            Log.e("tag", e.toString());
+            Log.i("tag","in null picture");
+            return;
         }
 
-        AndroidNetworking.upload(url)
-                .addMultipartFile("image", image)
-                .addMultipartParameter("filename","test.jpg")
-                .setTag("uploadTest")
-                .setPriority(Priority.HIGH)
-                .build()
-                .setUploadProgressListener(new UploadProgressListener() {
-                    @Override
-                    public void onProgress(long bytesUploaded, long totalBytes) {
-                        // do anything with progress
-                    }
-                })
-                .getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse (JSONObject response){
-                        // do anything with response
-                        Log.e("tag", "response" + response);
-
-                    }
-                    @Override
-                    public void onError (ANError error){
-                        // handle error
-                        Log.e("tag", error.toString());
-                    }
-                });
-
-    }
-    */
-
-    void upload() {
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        targetPicture.compress(Bitmap.CompressFormat.JPEG, 50, bao);
+        targetPicture.compress(Bitmap.CompressFormat.JPEG, 95, bao);
         byte[] ba = bao.toByteArray();
         bytePicture = Base64.encodeToString(ba, Base64.NO_WRAP);
 
@@ -291,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("image", bytePicture));
             nameValuePairs.add(new BasicNameValuePair("ImageName", System.currentTimeMillis() + ".jpg"));
+            Context context = MainActivity.this;
             try {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost httppost = new HttpPost(url);
@@ -298,19 +253,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 HttpResponse response = httpclient.execute(httppost);
                 String st = EntityUtils.toString(response.getEntity());
                 Log.v("log_tag", "In the try Loop" + st);
-                JSONObject reader = new JSONObject(st);
 
-                JSONArray results = reader.getJSONArray("results");
-                for (int i = 0; i < results.length(); i++) {
-                    str_results[i] = results.getString(i);
+                try {
+                    JSONObject reader = new JSONObject(st);
+
+                    JSONArray results = reader.getJSONArray("results");
+                    for (int i = 0; i < results.length(); i++) {
+                        str_results[i] = results.getString(i);
+                    }
+
+                    Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+                    intent.putExtra("answer", str_results);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    MainActivity.showErrorMessage("Answer Failed");
                 }
-
-                Intent intent =  new Intent(MainActivity.this, ResultActivity.class);
-                intent.putExtra("answer", str_results);
-                startActivity(intent);
 
             } catch (Exception e) {
                 Log.v("log_tag", "Error in http connection " + e.toString());
+                new AlertDialog.Builder(context)
+                        .setMessage("Network Failed")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                return;
+                            }
+                        })
+                        .show();
             }
             return "Success";
         }
@@ -318,6 +287,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
         }
+    }
+
+    ////////////
+    //Message//
+    //////////
+    public static void showErrorMessage(String message) {
+        alertDialogBuilder
+                .setTitle("Error")
+                .setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        return;
+                    }
+                })
+                .show();
     }
 }
 

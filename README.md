@@ -42,6 +42,7 @@ Run the project.
 
 Take a picture of Sudoku.
 Ex.
+
 ![Sudoku](ex1.jpg)
 ![Sudoku](ex2.png)
 ![Sudoku](ex3.jpg)
